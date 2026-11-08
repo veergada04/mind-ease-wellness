@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind-Ease | Your Calming Wellness Sanctuary</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sage: {
+              50: '#f4f7f4',
+              100: '#e5ece5',
+              200: '#ceddce',
+              300: '#a8c3a8',
+              400: '#7fa37f',
+              500: '#608660',
+              600: '#4a6b4a',
+              700: '#3c553c',
+              800: '#324532',
+              900: '#2a392a',
+            },
+            lavender: {
+              50: '#f7f6fb',
+              100: '#efedf7',
+              200: '#dfdbee',
+              300: '#c5bfe0',
+              400: '#a69dce',
+              500: '#8c80bc',
+              600: '#7566a7',
+            },
+            sand: {
+              50: '#faf8f5',
+              100: '#f4efe8',
+              200: '#e8ded0',
+              300: '#d7c7b2',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Custom animated breath ring */
+    .breath-ring {
+      transition: transform 4s ease-in-out, background-color 2s ease;
+    }
+    .breath-inhale {
+      transform: scale(1.45);
+    }
+    .breath-hold-full {
+      transform: scale(1.45);
+    }
+    .breath-exhale {
+      transform: scale(0.9);
+    }
+    .breath-hold-empty {
+      transform: scale(0.9);
+    }
+
+    /* Subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(150, 150, 150, 0.3);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(150, 150, 150, 0.5);
+    }
+  </style>
+</head>
+
+<body class="bg-sand-50 dark:bg-stone-950 text-stone-800 dark:text-stone-100 min-h-screen flex flex-col antialiased selection:bg-sage-200">
+
+  <!-- ================= APP CONTAINER ================= -->
+  <div id="app" class="flex-1 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-200/70 dark:border-stone-800 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sage-500 to-sage-400 flex items-center justify-center text-white shadow-md shadow-sage-500/20">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-sage-700 to-sage-500 dark:from-sage-400 dark:to-sage-200 bg-clip-text text-transparent">Mind-Ease</span>
+            <span class="hidden sm:inline-block text-xs px-2 py-0.5 ml-2 bg-sage-100 dark:bg-sage-900/60 text-sage-700 dark:text-sage-300 rounded-full font-medium">Wellness Sanctuary</span>
+          </div>
+        </div>
+
+        <!-- Navigation Links (Desktop) -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <button onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>Dashboard</span>
+          </button>
+          <button onclick="navigateTo('mood')" id="nav-mood" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">
+            <i data-lucide="smile-plus" class="w-4 h-4"></i>
+            <span>Mood Check-in</span>
+          </button>
+          <button onclick="navigateTo('breathe')" id="nav-breathe" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">
+            <i data-lucide="wind" class="w-4 h-4"></i>
+            <span>Breathe & Relax</span>
+          </button>
+          <button onclick="navigateTo('habits')" id="nav-habits" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>Habits</span>
+          </button>
+          <button onclick="navigateTo('insights')" id="nav-insights" class="nav-tab px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span>Insights</span>
+          </button>
+        </nav>
+
+        <!-- Right Side: Theme + User Profile / Login -->
+        <div class="flex items-center space-x-3">
+          <!-- Dark Mode Toggle -->
+          <button onclick="toggleDarkMode()" aria-label="Toggle theme" class="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 transition">
+            <i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+
+          <!-- User Section -->
+          <div id="user-header-section" class="flex items-center gap-2">
+            <!-- Rendered dynamically by updateAuthUI() -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Mobile Bottom Nav -->
+      <div class="md:hidden border-t border-stone-200 dark:border-stone-800 grid grid-cols-5 py-2 px-1 bg-white/95 dark:bg-stone-900/95 backdrop-blur">
+        <button onclick="navigateTo('dashboard')" class="flex flex-col items-center justify-center p-1 text-xs text-stone-600 dark:text-stone-300">
+          <i data-lucide="layout-dashboard" class="w-5 h-5 mb-1"></i>
+          <span>Home</span>
+        </button>
+        <button onclick="navigateTo('mood')" class="flex flex-col items-center justify-center p-1 text-xs text-stone-600 dark:text-stone-300">
+          <i data-lucide="smile-plus" class="w-5 h-5 mb-1"></i>
+          <span>Mood</span>
+        </button>
+        <button onclick="navigateTo('breathe')" class="flex flex-col items-center justify-center p-1 text-xs text-stone-600 dark:text-stone-300">
+          <i data-lucide="wind" class="w-5 h-5 mb-1"></i>
+          <span>Breathe</span>
+        </button>
+        <button onclick="navigateTo('habits')" class="flex flex-col items-center justify-center p-1 text-xs text-stone-600 dark:text-stone-300">
+          <i data-lucide="check-circle" class="w-5 h-5 mb-1"></i>
+          <span>Habits</span>
+        </button>
+        <button onclick="navigateTo('insights')" class="flex flex-col items-center justify-center p-1 text-xs text-stone-600 dark:text-stone-300">
+          <i data-lucide="trending-up" class="w-5 h-5 mb-1"></i>
+          <span>Insights</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+      <!-- ================= 1. VIEW: DASHBOARD ================= -->
+      <section id="view-dashboard" class="space-y-8">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sage-100 via-sage-50 to-lavender-100 dark:from-stone-900 dark:via-sage-950/40 dark:to-stone-900 p-6 sm:p-8 border border-sage-200/50 dark:border-stone-800 shadow-sm">
+          <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/70 dark:bg-stone-800/80 backdrop-blur text-sage-700 dark:text-sage-300 border border-sage-200/40">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="hero-date">Today</span>
+              </div>
+              <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-white">
+                Peace be with you, <span id="hero-user-name" class="text-sage-600 dark:text-sage-400">Friend</span> 🌿
+              </h1>
+              <p class="text-stone-600 dark:text-stone-400 max-w-xl text-sm sm:text-base">
+                Take a pause. Notice how your body feels right now, unclench your shoulders, and honor this moment.
+              </p>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="flex flex-wrap gap-3">
+              <button onclick="navigateTo('mood')" class="px-5 py-3 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-medium text-sm shadow-md shadow-sage-600/20 transition flex items-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Log Check-in</span>
+              </button>
+              <button onclick="navigateTo('breathe')" class="px-5 py-3 rounded-2xl bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 border border-stone-200/80 dark:border-stone-700 font-medium text-sm shadow-sm transition flex items-center gap-2">
+                <i data-lucide="wind" class="w-4 h-4 text-sage-500"></i>
+                <span>2-Min Breathing</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <!-- Streak Card -->
+          <div class="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center">
+              <i data-lucide="flame" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-medium text-stone-500 dark:text-stone-400">Mindful Streak</div>
+              <div class="text-2xl font-bold text-stone-900 dark:text-white" id="stat-streak">0 Days</div>
+            </div>
+          </div>
+
+          <!-- Mood Score -->
+          <div class="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 flex items-center justify-center">
+              <i data-lucide="heart" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-medium text-stone-500 dark:text-stone-400">Today's Mood</div>
+              <div class="text-2xl font-bold text-stone-900 dark:text-white" id="stat-today-mood">Not logged</div>
+            </div>
+          </div>
+
+          <!-- Habits Completed -->
+          <div class="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center">
+              <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-medium text-stone-500 dark:text-stone-400">Daily Habits</div>
+              <div class="text-2xl font-bold text-stone-900 dark:text-white" id="stat-habits-ratio">0/5</div>
+            </div>
+          </div>
+
+          <!-- Total Mindful Minutes -->
+          <div class="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/40 text-teal-500 flex items-center justify-center">
+              <i data-lucide="clock" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-medium text-stone-500 dark:text-stone-400">Breathing Cycles</div>
+              <div class="text-2xl font-bold text-stone-900 dark:text-white" id="stat-cycles">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Two-Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Left Column (2 Cols): Affirmation & Quick Habit checklist -->
+          <div class="lg:col-span-2 space-y-6">
+
+            <!-- Affirmation Card -->
+            <div class="p-6 rounded-3xl bg-gradient-to-r from-lavender-50 to-sage-50 dark:from-stone-900 dark:to-stone-900 border border-stone-200/80 dark:border-stone-800 relative">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs uppercase tracking-wider font-semibold text-lavender-600 dark:text-lavender-400 flex items-center gap-1.5">
+                  <i data-lucide="sun" class="w-4 h-4"></i> Daily Affirmation
+                </span>
+                <button onclick="refreshAffirmation()" class="p-1.5 rounded-lg hover:bg-stone-200/50 dark:hover:bg-stone-800 text-stone-500 transition" title="New Affirmation">
+                  <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                </button>
+              </div>
+              <p id="affirmation-text" class="text-lg sm:text-xl font-medium text-stone-800 dark:text-stone-100 italic mb-2">
+                "I am grounded, capable, and at peace with whatever this day brings."
+              </p>
+              <span id="affirmation-author" class="text-xs text-stone-500 dark:text-stone-400 font-medium">— Mind-Ease Wisdom</span>
+            </div>
+
+            <!-- Quick Habits Widget -->
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/80 dark:border-stone-800 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="check-square" class="w-5 h-5 text-sage-600"></i>
+                  Today's Rituals
+                </h3>
+                <button onclick="navigateTo('habits')" class="text-xs font-semibold text-sage-600 dark:text-sage-400 hover:underline">
+                  Manage all &rarr;
+                </button>
+              </div>
+              <div id="dashboard-habits-list" class="space-y-3">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Recent Check-ins -->
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/80 dark:border-stone-800 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="history" class="w-5 h-5 text-sage-600"></i>
+                  Recent Mood Reflections
+                </h3>
+                <button onclick="navigateTo('mood')" class="text-xs font-semibold text-sage-600 dark:text-sage-400 hover:underline">
+                  View Log &rarr;
+                </button>
+              </div>
+              <div id="dashboard-recent-moods" class="space-y-3">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column (1 Col): Grounding Exercise & Emergency Help -->
+          <div class="space-y-6">
+
+            <!-- 5-4-3-2-1 Sensory Grounding Tool -->
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/80 dark:border-stone-800 shadow-sm">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="compass" class="w-5 h-5 text-sage-600"></i>
+                  Grounding Exercise
+                </h3>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-sage-100 dark:bg-sage-900/60 text-sage-700 dark:text-sage-300 font-semibold">5-4-3-2-1</span>
+              </div>
+              <p class="text-xs text-stone-500 dark:text-stone-400 mb-4">
+                Feeling overwhelmed? Use your senses to anchor yourself in the present moment:
+              </p>
+              
+              <div class="space-y-2.5 text-sm" id="grounding-checklist">
+                <label class="flex items-center gap-3 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 cursor-pointer transition">
+                  <input type="checkbox" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                  <span class="text-stone-700 dark:text-stone-300 font-medium text-xs sm:text-sm">👁️ <strong>5 things</strong> you can see</span>
+                </label>
+                <label class="flex items-center gap-3 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 cursor-pointer transition">
+                  <input type="checkbox" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                  <span class="text-stone-700 dark:text-stone-300 font-medium text-xs sm:text-sm">✋ <strong>4 things</strong> you can physically touch</span>
+                </label>
+                <label class="flex items-center gap-3 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 cursor-pointer transition">
+                  <input type="checkbox" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                  <span class="text-stone-700 dark:text-stone-300 font-medium text-xs sm:text-sm">👂 <strong>3 sounds</strong> you can hear</span>
+                </label>
+                <label class="flex items-center gap-3 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 cursor-pointer transition">
+                  <input type="checkbox" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                  <span class="text-stone-700 dark:text-stone-300 font-medium text-xs sm:text-sm">👃 <strong>2 things</strong> you can smell</span>
+                </label>
+                <label class="flex items-center gap-3 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 cursor-pointer transition">
+                  <input type="checkbox" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                  <span class="text-stone-700 dark:text-stone-300 font-medium text-xs sm:text-sm">👅 <strong>1 thing</strong> you can taste</span>
+                </label>
+              </div>
+              
+              <button onclick="resetGrounding()" class="mt-4 w-full text-xs font-semibold py-2 px-3 rounded-xl border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition">
+                Reset Grounding
+              </button>
+            </div>
+
+            <!-- Crisis Support / Helpline Widget -->
+            <div class="p-6 rounded-3
